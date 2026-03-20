@@ -1,0 +1,98 @@
+// This is your Prisma schema file where you can
+// define your data models, enums, and other database-related configurations.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  gender       Gender
+  age          Int
+  weight       Float
+  height       Float
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  userDailyStatistic UserDailyStatistic[]
+  goal               Goal? // One-to-one relation with Goal
+}
+
+model Meal {
+  id        String   @id @default(uuid())
+  portion   Int
+  eatenAt   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userDailyStatisticId String //FK for UserDailyStatistic
+  userDailyStatistic   UserDailyStatistic @relation(fields: [userDailyStatisticId], references: [id])
+  mealHistory          MealHistory?
+}
+
+model MealHistory {
+  id        String   @id @default(uuid())
+  name      String
+  servings  Int
+  calories  Int
+  protein   Float
+  carb      Float
+  fat       Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  mealId String @unique // FK for meal, 1-to-1 relation
+  meal   Meal   @relation(fields: [mealId], references: [id])
+}
+
+model Goal {
+  id        String   @id @default(uuid())
+  name      String
+  calories  Int
+  steps     Int
+  protein   Float
+  carb      Float
+  fat       Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userDailyStatistics UserDailyStatistic[]
+  userId              String               @unique // FK for user, 1-to-1 relation
+  user                User                 @relation(fields: [userId], references: [id])
+}
+
+model UserDailyStatistic {
+  id        String   @id @default(uuid())
+  date      DateTime
+  calories  Int
+  steps     Int
+  protein   Float
+  carb      Float
+  fat       Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userId String // FK for user
+  user   User   @relation(fields: [userId], references: [id])
+  meals  Meal[]
+  goalId String
+  goal   Goal   @relation(fields: [goalId], references: [id])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
