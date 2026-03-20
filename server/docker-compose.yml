@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: calories-helper-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_DB: calories_helper
+    ports:
+      - "5433:5432"
+    volumes:
+      - calories_helper_pgdata:/var/lib/postgresql/data
+
+volumes:
+  calories_helper_pgdata:
