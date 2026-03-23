@@ -2,7 +2,11 @@
 client/node_modules/
 server/node_modules/
 
+server/src/generated/
+
 node_modules/
+
+.env
 
 # Optionally ignore environment files if desired
 server/.env.development
