@@ -10,6 +10,19 @@ datasource db {
   provider = "postgresql"
 }
 
+model Session {
+  id        String   @id @default(uuid())
+  expiresAt DateTime
+  userAgent String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
 model User {
   id           String   @id @default(uuid())
   name         String
@@ -23,6 +36,7 @@ model User {
   updatedAt    DateTime @updatedAt
 
   // Relations
+  sessions           Session[]
   userDailyStatistic UserDailyStatistic[]
   goal               Goal? // One-to-one relation with Goal
 }
