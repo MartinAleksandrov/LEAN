@@ -2,7 +2,7 @@
 // define your data models, enums, and other database-related configurations.
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
